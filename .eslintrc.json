@@ -1,0 +1,7 @@
+{
+  "extends": "wix-editor/node",
+  "env": {
+    "es6": true,
+    "node": true
+  }
+}
