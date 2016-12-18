@@ -6,9 +6,9 @@ Promise wrapper for communication via post message and MesssageChannel
 `npm i message-channel-promise`
 
 ## Usage
-The module exposes a function which can be used to wrap communication via MessageChannel in a promise, resolved only when the recepient responds.
+The module exposes a function which can be used to wrap communication via [MessageChannel](https://developer.mozilla.org/en-US/docs/Web/API/Channel_Messaging_API) in a promise, resolved only when the recepient responds.
 
-This works with both iframes and webworkers.
+This works with both IFrames and webworkers.
 
 ### parameters
 * `target`: The `contentWindow` or worker,
@@ -17,11 +17,25 @@ This works with both iframes and webworkers.
 [You should always send a targetOrigin when working with iFrames](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#Security_concerns).
 ### Examples
 
-For example:
+Usage with IFrames:
 
 ```js
 const sendChannelMessage =  require('message-channel-promise');
 const frame = document.querySelector('#iframe');
 const message = {/* ... */};
-sendChannelMessage(frame.contentWindow, message, '*');
+sendChannelMessage(frame.contentWindow, message, '*')
+  .then(function(data) {
+    // Do something with the response
+  });
+```
+
+Usage with Web Workers:
+
+```js
+const sendChannelMessage =  require('message-channel-promise');
+const worker = new Worker(someScript);
+sendChannelMessage(worker, message)
+    .then(function (data) {
+      // Do something with the response
+    });
 ```
