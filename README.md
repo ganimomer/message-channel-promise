@@ -15,6 +15,7 @@ This works with both IFrames and webworkers.
 * `message`: The message to send. Must be a serializable JSON object.
 * `targetOrigin` (optional): The origin to send the message to. Defaults to `*`, and not necessary for web workers.
 [You should always send a targetOrigin when working with iFrames](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#Security_concerns).
+
 ### Examples
 
 Usage with IFrames:
