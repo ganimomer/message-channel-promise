@@ -3,19 +3,9 @@ const sendChannelMessage = require('../src/index.js')
 describe('sendChannelMessage', () => {
   describe('to iframe', () => {
     let iframe
-
-    const echoIframeContent = `
-    <h1> iframe </h1>
-    <script>
-    onmessage = ({data, ports: [port]}) => {
-      port.postMessage(data)
-    }
-    </script>`
-
     beforeAll(done => {
       iframe = document.createElement('iframe')
-      const blob = new Blob([echoIframeContent], {type: 'text/html'})
-      iframe.src = URL.createObjectURL(blob)
+      iframe.src = '/base/test/iframe.html'
       document.body.appendChild(iframe)
       iframe.addEventListener('load', () => done())
     })
@@ -30,13 +20,9 @@ describe('sendChannelMessage', () => {
 
   describe('to worker', () => {
     let worker
-    const echoWorkerContent = `self.onmessage = ({data, ports: [port]}) => {
-      port.postMessage(data)
-    }`
 
     beforeAll(done => {
-      const blob = new Blob([echoWorkerContent], {type: 'text/javascript'})
-      worker = new Worker(URL.createObjectURL(blob))
+      worker = new Worker('/base/test/worker.js')
       done()
     })
 

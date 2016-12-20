@@ -1,0 +1,6 @@
+<h1> iframe </h1>
+<script>
+  onmessage = ({data, ports: [port]}) => {
+    port.postMessage(data)
+  }
+</script>
