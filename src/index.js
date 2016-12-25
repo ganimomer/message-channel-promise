@@ -1,6 +1,9 @@
 'use strict'
 module.exports = function sendChannelMessage(target, message, targetOrigin = '*') {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
+    if (!target || !target.postMessage) {
+      reject(new Error('Invalid target'))
+    }
     const {port1, port2} = new MessageChannel()
     if (target instanceof Worker) {
       target.postMessage(message, [port2])

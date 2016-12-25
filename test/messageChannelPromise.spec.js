@@ -1,6 +1,22 @@
 'use strict'
 const sendChannelMessage = require('../src/index.js')
 describe('sendChannelMessage', () => {
+  describe('validity checks', () => {
+    it('should throw error if target is undefined', done => {
+      sendChannelMessage()
+        .catch(err => {
+          expect(err.message).toBe('Invalid target')
+        })
+        .then(done)
+    });
+  });
+  it('should throw error if target is not a context', done => {
+    sendChannelMessage({})
+      .catch(err => {
+        expect(err.message).toBe('Invalid target')
+      })
+      .then(done)
+  });
   describe('to iframe', () => {
     let iframe
     beforeAll(done => {
@@ -17,7 +33,6 @@ describe('sendChannelMessage', () => {
         .then(done)
     })
   })
-
   describe('to worker', () => {
     let worker
 
