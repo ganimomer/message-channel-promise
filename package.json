@@ -1,6 +1,6 @@
 {
   "name": "message-channel-promise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Promise wrapper for communication via post message and MesssageChannel",
   "main": "build/index.js",
   "scripts": {
