@@ -9,6 +9,9 @@
     "build": "webpack",
     "prepublish": "npm run build"
   },
+  "files": [
+    "build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ganimomer/message-channel-promise.git"
