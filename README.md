@@ -11,8 +11,8 @@ The module exposes a function which can be used to wrap communication via [Messa
 This works with both IFrames and webworkers.
 
 ### parameters
-* `target`: The `contentWindow` or worker,
 * `message`: The message to send. Must be a serializable JSON object.
+* `target`: The `contentWindow` or worker. can be omitted if sending from worker, since it sends messages to itself.
 * `targetOrigin` (optional): The origin to send the message to. Defaults to `*`, and not necessary for web workers.
 [You should always send a targetOrigin when working with iFrames](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#Security_concerns).
 
@@ -24,7 +24,7 @@ Usage with IFrames:
 const sendChannelMessage =  require('message-channel-promise');
 const frame = document.querySelector('#iframe');
 const message = {/* ... */};
-sendChannelMessage(frame.contentWindow, message, '*')
+sendChannelMessage(message, frame.contentWindow, '*')
   .then(function(data) {
     // Do something with the response
   });
@@ -35,7 +35,7 @@ Usage with Web Workers:
 ```js
 const sendChannelMessage =  require('message-channel-promise');
 const worker = new Worker(someScript);
-sendChannelMessage(worker, message)
+sendChannelMessage(message)
     .then(function (data) {
       // Do something with the response
     });

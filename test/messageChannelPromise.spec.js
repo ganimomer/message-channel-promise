@@ -8,25 +8,25 @@ describe('sendChannelMessage', () => {
           expect(err.message).toBe('Invalid target')
         })
         .then(done)
-    });
-  });
+    })
+  })
   it('should throw error if target is not a context', done => {
     sendChannelMessage({})
       .catch(err => {
         expect(err.message).toBe('Invalid target')
       })
       .then(done)
-  });
+  })
   describe('to iframe', () => {
     let iframe
     beforeAll(done => {
       iframe = document.createElement('iframe')
-      iframe.src = '/base/test/iframe.html'
+      iframe.src = '/base/test/echoIframe.html'
       document.body.appendChild(iframe)
       iframe.addEventListener('load', () => done())
     })
     it('should send a message via channel to an echo iframe and resolve once it is returned', done => {
-      sendChannelMessage(iframe.contentWindow, {key: 'value'}, '*')
+      sendChannelMessage({key: 'value'}, iframe.contentWindow, '*')
         .then(data => {
           expect(data).toEqual({key: 'value'})
         })
@@ -37,12 +37,12 @@ describe('sendChannelMessage', () => {
     let worker
 
     beforeAll(done => {
-      worker = new Worker('/base/test/worker.js')
+      worker = new Worker('/base/test/echoWorker.js')
       done()
     })
 
     it('should send a message via channel to an echo worker and resolve once it is returned', done => {
-      sendChannelMessage(worker, {key: 'value'}, '*')
+      sendChannelMessage({key: 'value'}, worker, '*')
         .then(data => {
           expect(data).toEqual({key: 'value'})
         })
@@ -51,6 +51,19 @@ describe('sendChannelMessage', () => {
 
     afterAll(() => {
       worker.terminate()
+    })
+  })
+
+  describe('from worker to itself', () => {
+    it('should be able to send a message from a worker to itself', done => {
+      const worker = new Worker('/base/test/usageWorker.js')
+      worker.onmessage = ({data, ports}) => {
+        if (data.done) {
+          done()
+        } else {
+          ports[0].postMessage(data)
+        }
+      }
     })
   })
 })
