@@ -26,7 +26,7 @@ describe('sendChannelMessage', () => {
       iframe.addEventListener('load', () => done())
     })
     it('should send a message via channel to an echo iframe and resolve once it is returned', done => {
-      sendChannelMessage({key: 'value'}, iframe.contentWindow, '*')
+      sendChannelMessage({key: 'value'}, iframe.contentWindow, {targetOrigin: '*'})
         .then(data => {
           expect(data).toEqual({key: 'value'})
         })
@@ -42,7 +42,7 @@ describe('sendChannelMessage', () => {
     })
 
     it('should send a message via channel to an echo worker and resolve once it is returned', done => {
-      sendChannelMessage({key: 'value'}, worker, '*')
+      sendChannelMessage({key: 'value'}, worker, {targetOrigin: '*'})
         .then(data => {
           expect(data).toEqual({key: 'value'})
         })
@@ -78,6 +78,29 @@ describe('sendChannelMessage', () => {
           expect(data).toEqual(mockData)
         })
         .then(done)
+    })
+  })
+
+  describe('transferring objects', () => {
+    const encode = str => {
+      const buf = new ArrayBuffer(str.length * 2)
+      const bufView = new Uint16Array(buf)
+      const arr = [...str]
+      arr.forEach((c, i) => {
+        bufView[i] = str.charCodeAt(i)
+      })
+      return buf
+    }
+    const decode = buffer => String.fromCharCode(...new Uint16Array(buffer))
+
+    it('should pass serializable objects in transfer', () => {
+      const {port1, port2} = new MessageChannel()
+      const testString = 'hello'
+      port1.onmessage = ({data, ports: [port, ...transfer]}) => {
+        expect(decode(transfer[0])).toBe(data)
+        port.postMessage()
+      }
+      sendChannelMessage(testString, port2, {transfer: [encode(testString)]})
     })
   })
 })

@@ -13,7 +13,10 @@ This works with IFrames and web workers, and [message ports](https://developer.m
 ### parameters
 * `message`: The message to send. Must be a serializable JSON object.
 * `target`: The `contentWindow` or worker. can be omitted if sending from worker, since it sends messages to itself.
-* `targetOrigin` (optional): The origin to send the message to. Defaults to `*`, and not necessary for web workers.
+* `options`: contains optional parameters (optional):
+  * `targetOrigin` (optional): The origin to send the message to. Defaults to `*`, and not necessary for web workers or message ports.
+  * `transfer` (optional): a list of other [Transferrable](https://developer.mozilla.org/en-US/docs/Web/API/Transferable) objects to be passed.
+
 [You should always send a targetOrigin when working with iFrames](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#Security_concerns).
 
 ### Examples
