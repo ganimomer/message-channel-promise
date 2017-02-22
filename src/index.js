@@ -11,7 +11,7 @@ module.exports = function sendChannelMessage(message, target, targetOrigin = '*'
       reject(new Error('Invalid target'))
     }
     const {port1, port2} = new MessageChannel()
-    if (target === self || target instanceof Worker) {
+    if (target === self || target instanceof Worker || target instanceof MessagePort) {
       target.postMessage(message, [port2])
     } else {
       target.postMessage(message, targetOrigin, [port2])

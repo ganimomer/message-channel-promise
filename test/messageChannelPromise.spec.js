@@ -53,7 +53,6 @@ describe('sendChannelMessage', () => {
       worker.terminate()
     })
   })
-
   describe('from worker to itself', () => {
     it('should be able to send a message from a worker to itself', done => {
       const worker = new Worker('/base/test/usageWorker.js')
@@ -64,6 +63,21 @@ describe('sendChannelMessage', () => {
           ports[0].postMessage(data)
         }
       }
+    })
+  })
+  describe('to message port', () => {
+    it('should send a message via channel to a message port', done => {
+      const {port1, port2} = new MessageChannel()
+      const mockData = {key: 'value'}
+      port1.onmessage = ({data, ports: [port]}) => {
+        expect(data).toEqual(mockData)
+        port.postMessage(data)
+      }
+      sendChannelMessage(mockData, port2)
+        .then(data => {
+          expect(data).toEqual(mockData)
+        })
+        .then(done)
     })
   })
 })
