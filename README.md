@@ -27,7 +27,7 @@ Usage with IFrames:
 const sendChannelMessage =  require('message-channel-promise');
 const frame = document.querySelector('#iframe');
 const message = {/* ... */};
-sendChannelMessage(message, frame.contentWindow, '*')
+sendChannelMessage(message, frame.contentWindow, {targetOrigin: '*'})
   .then(function(data) {
     // Do something with the response
   });
