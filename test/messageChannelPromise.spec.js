@@ -80,6 +80,23 @@ describe('sendChannelMessage', () => {
         .then(done)
     })
   })
+  describe('from window to itself', () => {
+      it('should send a message via channel to itself properly', done => {
+        const message = {key1: 'value1', key2: 'value2'}
+        const handler = ({data, ports: [port]}) => {
+          expect(data).toEqual(message)
+          port.postMessage(data)
+        }
+        window.addEventListener('message', handler)
+        sendChannelMessage(message, window)
+          .then(res => {
+            expect(res).toEqual(message)
+          })
+          .then(() => window.removeEventListener('message', handler))
+          .then(done, done.fail)
+
+      })
+  })
 
   describe('transferring objects', () => {
     const encode = str => {
