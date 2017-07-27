@@ -4,7 +4,7 @@ module.exports = function sendChannelMessage(message, target, {targetOrigin = '*
   const isWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope
 
   return new Promise((resolve, reject) => {
-    if (isWorker) {
+    if (isWorker && !target) {
       target = self
     }
     if (!target || !target.postMessage) {

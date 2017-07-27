@@ -79,6 +79,16 @@ describe('sendChannelMessage', () => {
         })
         .then(done)
     })
+    it('should send message from worker to message port', done => {
+      const {port1, port2} = new MessageChannel()
+      const worker = new Worker('/base/test/messagePortWorker.js')
+      worker.onmessage = ({data}) => {
+        expect(data).toBe(true)
+        done()
+      }
+      port1.onmessage = ({data, ports: [port]}) => port.postMessage(true)
+      worker.postMessage('START', [port2])
+    })
   })
   describe('from window to itself', () => {
       it('should send a message via channel to itself properly', done => {
